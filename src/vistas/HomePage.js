@@ -4,37 +4,43 @@ import { WeatherContext } from '../context/WeatherContext';
 import { TextField, Button, Card, CardContent, Typography, Grid, Box, IconButton, Checkbox, FormControlLabel } from '@mui/material';
 import { Star, StarBorder } from '@mui/icons-material';
 import { farenheitToCelsius } from '../utils/utils';
-
+import CircularProgress from '@mui/material/CircularProgress'; // Importa CircularProgress
 
 const HomePage = () => {
   const [city, setCity] = useState('');
   const { setWeatherData, favorites, addFavorite, removeFavorite } = useContext(WeatherContext);
   const [isFavorite, setIsFavorite] = useState(false);
-
   const [cityWeather, setCityWeather] = useState(null);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false); // Estado para manejar el estado de carga
 
   const handleSearch = async () => {
-    
+    setLoading(true); // Establece que está cargando
+
     const options = {
       method: 'GET',
       url: `https://open-weather13.p.rapidapi.com/city/${city}/ES`,
       headers: {
-        'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY, // poner el .ENV
+        'x-rapidapi-key': process.env.REACT_APP_RAPIDAPI_KEY,
         'x-rapidapi-host': 'open-weather13.p.rapidapi.com'
       }
     };
-    
+
     try {
       const response = await axios.request(options);
-      if (response.data.cod === "404") {
-        return; //manejar caso de no encontrar ciudad
+      if (response.data.cod !== "200" && response.data.cod != 200) {
+        setError('No se encontró la ciudad ingresada');
+        setCityWeather(null);
       } else {
         setCityWeather(response.data);
         setIsFavorite(favorites.some(fav => fav.name === response.data.name));
+        setError('');
       }
-      console.log(response.data);
     } catch (error) {
       console.error(error);
+      setError('Ocurrió un error al buscar la ciudad');
+    } finally {
+      setLoading(false); // Termina el estado de carga
     }
   };
 
@@ -87,11 +93,17 @@ const HomePage = () => {
                 color="primary"
                 fullWidth
                 sx={{ padding: '10px 0' }}
+                disabled={loading} // Deshabilita el botón si está cargando
               >
-                Buscar
+                {loading ? <CircularProgress size={24} color="inherit" /> : 'Buscar'} {/* Muestra el spinner si está cargando */}
               </Button>
             </Grid>
           </Grid>
+          {error && (
+            <Typography color="error" mt={2}>
+              {error}
+            </Typography>
+          )}
           {cityWeather && (
             <Box mt={4}>
               <img
