@@ -1,11 +1,6 @@
 import axios from "axios";
 
 
-
-const delegacionesPorModulo = async () => {
-    return;
-}
-
 const farenheitToCelsius = (tempFarenheit) => {
     return (tempFarenheit - 32) * 5 / 9;
 }
