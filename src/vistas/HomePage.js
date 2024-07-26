@@ -127,8 +127,8 @@ const HomePage = () => {
               </Grid>
               <Typography variant="h6">{cityWeather.weather[0].description}</Typography>
               <Typography variant="h4">{farenheitToCelsius(cityWeather.main.temp).toFixed(2)}°C</Typography>
-              <Typography>Sensación térmica: {cityWeather.main.feels_like.toFixed(2)}°C</Typography>
-              <Typography>Mínima: {cityWeather.main.temp_min.toFixed(2)}°C / Máxima: {cityWeather.main.temp_max.toFixed(2)}°C</Typography>
+              <Typography>Sensación térmica: {farenheitToCelsius(cityWeather.main.feels_like).toFixed(2)}°C</Typography>
+              <Typography>Mínima: {farenheitToCelsius(cityWeather.main.temp_min).toFixed(2)}°C / Máxima: {farenheitToCelsius(cityWeather.main.temp_max).toFixed(2)}°C</Typography>
               <Typography>Humedad: {cityWeather.main.humidity}%</Typography>
               <Typography>Viento: {cityWeather.wind.speed} m/s</Typography>
             </Box>
